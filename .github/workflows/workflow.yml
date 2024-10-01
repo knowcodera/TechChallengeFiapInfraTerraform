@@ -29,18 +29,17 @@ jobs:
         with:
           terraform_version: 1.9.6
 
-      # Inicializa o Terraform no diretório especificado
+      # Inicializa o Terraform (sem -chdir)
       - name: Terraform Init
-        run: terraform init -chdir=./
+        run: terraform init
 
-      # Valida os arquivos de configuração do Terraform no diretório especificado
+      # Valida os arquivos de configuração do Terraform (sem -chdir)
       - name: Terraform Validate
-        run: terraform validate -chdir=./
+        run: terraform validate
 
       # Realiza o plano (plan) do Terraform para ver o que será aplicado
       - name: Terraform Plan
         run: terraform plan \
-          -chdir=./ \
           -var="client_id=${{ secrets.ARM_CLIENT_ID }}" \
           -var="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
           -var="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
@@ -50,7 +49,6 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply \
-          -chdir=./ \
           -auto-approve \
           -var="client_id=${{ secrets.ARM_CLIENT_ID }}" \
           -var="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
