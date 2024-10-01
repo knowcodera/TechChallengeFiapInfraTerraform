@@ -1,0 +1,45 @@
+name: Terraform Infrastructure CI/CD
+
+on:
+  push:
+    branches:
+      - main  # O pipeline será acionado quando houver push na branch 'main'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa o código do repositório
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Configura o Terraform no ambiente de CI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.3  # Especifique a versão do Terraform que está usando
+
+      # Inicializa o Terraform
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform  # Certifique-se de estar no diretório onde está seu código Terraform
+
+      # Valida os arquivos de configuração do Terraform
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./terraform
+
+      # Realiza o plano (plan) do Terraform para ver o que será aplicado
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ./terraform
+
+      # Aplica as mudanças do Terraform no Azure (com auto approve)
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
