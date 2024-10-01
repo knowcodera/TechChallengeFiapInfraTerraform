@@ -8,40 +8,42 @@ on:
     branches:
       - main
 
-env:
-  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      # Variáveis de ambiente para o provedor azurerm
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+      # Variáveis do Terraform (prefixadas com TF_VAR_)
+      TF_VAR_db_admin_user: ${{ secrets.DB_ADMIN_USER }}
+      TF_VAR_db_admin_password: ${{ secrets.DB_ADMIN_PASSWORD }}
+      TF_VAR_my_ip_address: ${{ secrets.MY_IP_ADDRESS }}
+      TF_VAR_db_server: "mysqlservertechchallenge" # Você pode ajustar conforme necessário
+      TF_VAR_db_name: "mydatabasetechchallenge"     # Você pode ajustar conforme necessário
+      TF_VAR_db_port: "1433"            # Porta padrão do SQL Server
 
     steps:
-      # Baixa o código do repositório
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Configura o Terraform no ambiente de CI
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.6
 
-      # Inicializa o Terraform (sem -chdir)
       - name: Terraform Init
         run: terraform init
 
-      # Valida os arquivos de configuração do Terraform (sem -chdir)
       - name: Terraform Validate
         run: terraform validate
 
-      # Realiza o plano (plan) do Terraform para ver o que será aplicado
       - name: Terraform Plan
         run: terraform plan
 
-      # Aplica as mudanças do Terraform no Azure (com auto approve)
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
