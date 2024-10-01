@@ -1,11 +1,7 @@
-variable "subscription_id" {}
-variable "client_id" {}
-variable "client_secret" {}
-variable "tenant_id" {}
-
 variable "db_admin_user" {
   description = "Nome do administrador do SQL Server"
   type        = string
+  sensitive = true
 }
 
 variable "db_admin_password" {
@@ -17,6 +13,7 @@ variable "db_admin_password" {
 variable "my_ip_address" {
   description = "Seu endereço IP público"
   type        = string
+  sensitive = true
 }
 
 variable "db_server" {
