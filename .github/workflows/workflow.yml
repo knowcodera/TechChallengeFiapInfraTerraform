@@ -3,7 +3,7 @@ name: Terraform Infrastructure CI/CD
 on:
   push:
     branches:
-      - main  # O pipeline será acionado quando houver push na branch 'main'
+      - main 
   pull_request:
     branches:
       - main
