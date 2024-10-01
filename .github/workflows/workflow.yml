@@ -29,33 +29,30 @@ jobs:
         with:
           terraform_version: 1.9.6
 
-      # Inicializa o Terraform
+      # Inicializa o Terraform no diretório especificado
       - name: Terraform Init
-        run: terraform init
-        working-directory: ./
+        run: terraform init -chdir=./
 
-      # Valida os arquivos de configuração do Terraform
+      # Valida os arquivos de configuração do Terraform no diretório especificado
       - name: Terraform Validate
-        run: terraform validate
-        working-directory: ./
+        run: terraform validate -chdir=./
 
       # Realiza o plano (plan) do Terraform para ver o que será aplicado
       - name: Terraform Plan
         run: terraform plan \
+          -chdir=./ \
           -var="client_id=${{ secrets.ARM_CLIENT_ID }}" \
           -var="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
           -var="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
-          -var="tenant_id=${{ secrets.ARM_TENANT_ID }}" \
-          -var-file="terraform.tfvars"
-        working-directory: ./
+          -var="tenant_id=${{ secrets.ARM_TENANT_ID }}"
 
       # Aplica as mudanças do Terraform no Azure (com auto approve)
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve \
+        run: terraform apply \
+          -chdir=./ \
+          -auto-approve \
           -var="client_id=${{ secrets.ARM_CLIENT_ID }}" \
           -var="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
           -var="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
-          -var="tenant_id=${{ secrets.ARM_TENANT_ID }}" \
-          -var-file="terraform.tfvars"
-        working-directory: ./
+          -var="tenant_id=${{ secrets.ARM_TENANT_ID }}"
