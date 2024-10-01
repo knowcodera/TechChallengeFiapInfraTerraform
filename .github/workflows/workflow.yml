@@ -21,25 +21,25 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.3  # Especifique a versão do Terraform que está usando
+          terraform_version: 1.9.6
 
       # Inicializa o Terraform
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform  # Certifique-se de estar no diretório onde está seu código Terraform
+        working-directory: ./
 
       # Valida os arquivos de configuração do Terraform
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./terraform
+        working-directory: ./
 
       # Realiza o plano (plan) do Terraform para ver o que será aplicado
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./terraform
+        working-directory: ./
 
       # Aplica as mudanças do Terraform no Azure (com auto approve)
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
-        working-directory: ./terraform
+        working-directory: ./
