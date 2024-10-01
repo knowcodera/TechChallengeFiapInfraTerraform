@@ -45,6 +45,8 @@ jobs:
         run: |
           terraform import azurerm_resource_group.rg /subscriptions/${{ env.ARM_SUBSCRIPTION_ID }}/resourceGroups/MyResourceGroup || true
           terraform import azurerm_mssql_server.sql_server /subscriptions/${{ env.ARM_SUBSCRIPTION_ID }}/resourceGroups/MyResourceGroup/providers/Microsoft.Sql/servers/${{ env.TF_VAR_db_name }} || true
+          terraform import azurerm_mssql_database.sql_db /subscriptions/${{ env.ARM_SUBSCRIPTION_ID }}/resourceGroups/MyResourceGroup/providers/Microsoft.Sql/servers/${{ env.TF_VAR_db_name }}/databases/${{ env.TF_VAR_db_name }} || true
+          terraform import azurerm_mssql_firewall_rule.allow_azure_access /subscriptions/${{ env.ARM_SUBSCRIPTION_ID }}/resourceGroups/MyResourceGroup/providers/Microsoft.Sql/servers/${{ env.TF_VAR_db_name }}/firewallRules/AllowAzureServices || true
           terraform import kubernetes_secret.api_secrets default/api-secrets || true
           terraform import kubernetes_config_map_v1.api_config default/api-config || true
           terraform import kubernetes_horizontal_pod_autoscaler.api_hpa default/api-hpa || true
