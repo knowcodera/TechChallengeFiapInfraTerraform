@@ -46,9 +46,9 @@ jobs:
           TF_VAR_db_admin_user: ${{ secrets.DB_ADMIN_USER }}
           TF_VAR_db_admin_password: ${{ secrets.DB_ADMIN_PASSWORD }}
           TF_VAR_my_ip_address: ${{ secrets.MY_IP_ADDRESS }}
-          TF_VAR_db_name: "mydatabasetechchallenge" # 
-          TF_VAR_db_server: "mysqlservertechchallenge" 
-          TF_VAR_db_port: "1433"       
+          TF_VAR_db_name: ${{ secrets.DB_NAME }}
+          TF_VAR_db_server: ${{ secrets.DB_SERVER }}
+          TF_VAR_db_port: "1433"  # Ou use uma variável se necessário
         run: terraform import azurerm_resource_group.rg /subscriptions/${{ env.ARM_SUBSCRIPTION_ID }}/resourceGroups/MyResourceGroup || true
 
       - name: Terraform Plan
@@ -56,6 +56,9 @@ jobs:
           TF_VAR_db_admin_user: ${{ secrets.DB_ADMIN_USER }}
           TF_VAR_db_admin_password: ${{ secrets.DB_ADMIN_PASSWORD }}
           TF_VAR_my_ip_address: ${{ secrets.MY_IP_ADDRESS }}
+          TF_VAR_db_name: ${{ secrets.DB_NAME }}
+          TF_VAR_db_server: ${{ secrets.DB_SERVER }}
+          TF_VAR_db_port: "1433"  # Ou use uma variável se necessário
         run: terraform plan
 
       - name: Terraform Apply
@@ -64,5 +67,7 @@ jobs:
           TF_VAR_db_admin_user: ${{ secrets.DB_ADMIN_USER }}
           TF_VAR_db_admin_password: ${{ secrets.DB_ADMIN_PASSWORD }}
           TF_VAR_my_ip_address: ${{ secrets.MY_IP_ADDRESS }}
+          TF_VAR_db_name: ${{ secrets.DB_NAME }}
+          TF_VAR_db_server: ${{ secrets.DB_SERVER }}
+          TF_VAR_db_port: "1433"  # Ou use uma variável se necessário
         run: terraform apply -auto-approve
-
